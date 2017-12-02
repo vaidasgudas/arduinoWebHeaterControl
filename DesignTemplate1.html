@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Home Thermostat</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	
+	<style>
+		html, body {
+			background-color: #212529;
+		}
+	</style>
+  </head>
+  <body>
+    
+	<table class="table table-dark">
+		<tbody>
+		
+			<tr class="bg-danger">
+				<td>Heater state</td>
+				<td>
+					Heating! <span id="countdown" class="badge badge-warning">120</span>
+					<button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#turnOffModal">
+						Turn Off
+					</button>
+				</td>
+			</tr>
+			
+			<!-- <tr class="bg-primary"> -->
+				<!-- <td>Heater state</td> -->
+				<!-- <td> -->
+					<!-- Off -->
+					<!-- <button type="button" class="btn btn-warning btn-sm float-right" data-toggle="modal" data-target="#turnOnModal"> -->
+						<!-- Turn On -->
+					<!-- </button> -->
+				<!-- </td> -->
+			<!-- </tr> -->
+			
+			<tr>
+				<td>Temperature</td>
+				<td>20.6<small> &#8451;</small></td>
+			</tr>
+			<tr>
+				<td>Humidity</td>
+				<td>35<small>%</small></td>
+			</tr>
+			<tr>
+				<td colspan="2"></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<!-- Turn On Modal -->
+	<div class="modal fade" id="turnOnModal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="turnOnModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="turnOnModalLabel">Turn On Heater</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="/turnOn" method="get">
+						<div class="form-group">
+							<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" id="inputPassword" placeholder="Password" name="pass">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="forPeriod" class="col-sm-2 col-form-label">For</label>
+							<div class="col-sm-10">
+								<select class="form-control" id="forPeriod" name="for">
+									<optgroup>
+										<option value="t1200">20 min</option>
+										<option value="t2400">40 min</option>
+										<option value="t3600">1 hour</option>
+										<option value="t7200">2 hour</option>
+									</optgroup>
+									<optgroup>
+										<option value="d0.2">&#916; 0.2 &#8451;</option>
+										<option value="d0.4">&#916; 0.4 &#8451;</option>
+										<option value="d1">&#916; 1 &#8451;</option>
+									</optgroup>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-warning">Turn On</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Turn Off Modal -->
+	<div class="modal fade" id="turnOffModal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="turnOffModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="turnOffModalLabel">Turn Off Heater</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form action="/turnOff" method="get">
+						<div class="form-group">
+							<label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" id="inputPassword" placeholder="Password" name="pass">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Turn Off</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	
+	<script type="text/javascript">
+		function startTimer(duration, display) {
+			var timer = duration, minutes, seconds;
+			setInterval(function () {
+				minutes = parseInt(timer / 60, 10);
+				seconds = parseInt(timer % 60, 10);
+				minutes = minutes < 10 ? "0" + minutes : minutes;
+				seconds = seconds < 10 ? "0" + seconds : seconds;
+				display.text(minutes + ":" + seconds);
+				if (--timer < 0) {
+					window.location.href = "/";
+				}
+			}, 1000);
+		}
+
+		$(function () {
+			if($("#countdown").length == 1){
+				var display = $("#countdown");
+				var duration = parseInt(display.text());
+				display.text("");
+				startTimer(duration, display);
+			}
+			
+			setInterval(function () {
+				window.location.href = "/";
+			}, 60 * 1000);
+		});
+	</script>	
+	
+  </body>
+</html>
