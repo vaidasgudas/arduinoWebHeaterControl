@@ -12,6 +12,7 @@ Timer t;
 
 const int relayPin = 7;
 const int sensorPin = 6;
+const String password = "pass"; // Set password here
 
 const String version = "1";
 
@@ -58,6 +59,11 @@ void loop() {
   EthernetClient client = server.available();
   rest.handle(client);
   t.update();
+    
+  if(digitalRead(relayPin) == HIGH && turnOffAfterSecs == 0 && turnOffOnTemp == 0){
+      digitalWrite(relayPin, LOW);
+  }
+  
   wdt_reset();
 }
 
@@ -71,12 +77,6 @@ void runEverySecond(){
   if(turnOffOnTemp != 0 && temperature >= turnOffOnTemp){
     turnOffOnTemp = 0;
   }
-
-  int relayState = digitalRead(relayPin);
-
-  if(relayState == HIGH && turnOffAfterSecs == 0 && turnOffOnTemp == 0){
-      digitalWrite(relayPin, LOW);
-  }
 }
 
 int updateSensorData(){
@@ -87,21 +87,53 @@ int updateSensorData(){
     humidity = (int)fHumidity;
 }
 
-int turnOnLimitedTime(String param){
-  turnOffAfterSecs = param.toInt(); 
+int turnOnLimitedTime(String params){
+  String requestPassword = getValueFromParam(params, ':', 1);
+  if(requestPassword != password){
+    return 0;  
+  }
+  
+  turnOffAfterSecs = getValueFromParam(params, ':', 0).toInt(); 
   digitalWrite(relayPin, HIGH);
   return 1;
 }
 
-int turnOnForDeltaT(String param){
-  int deltaT = param.toInt();
+int turnOnForDeltaT(String params){
+  String requestPassword = getValueFromParam(params, ':', 1);
+  if(requestPassword != password){
+    return 0;  
+  }
+  
+  int deltaT = getValueFromParam(params, ':', 0).toInt();
   turnOffOnTemp = temperature + deltaT;  
   digitalWrite(relayPin, HIGH);
   return 1;
 }
 
 int turnOff(String param){
+  if(param != password){
+    return 0;  
+  }
+  
   digitalWrite(relayPin, LOW);
   turnOffOnTemp = 0;
   turnOffAfterSecs = 0;
+  return 1;
+}
+
+String getValueFromParam(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
