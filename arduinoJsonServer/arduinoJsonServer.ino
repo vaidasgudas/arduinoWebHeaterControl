@@ -59,6 +59,8 @@ void turnOnForDeltaT(String params){
 
 void turnOff(String param){
   digitalWrite(relayPin, LOW);
+  turnOffAfterSecs = 0;
+  turnOffOnTemp = 0;
 }
 
 void runEvery5Sec(){
