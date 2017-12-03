@@ -35,6 +35,11 @@
 				<td><?=$humidity?><small>%</small></td>
 			</tr>
 			<tr>
+				<td colspan="2" class="center">
+					<a href="/" class="btn btn-secondary btn-sm float-right" role="button" aria-pressed="true">Refresh</a>
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2"></td>
 			</tr>
 		</tbody>
