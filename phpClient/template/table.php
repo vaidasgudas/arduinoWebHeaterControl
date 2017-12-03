@@ -4,7 +4,12 @@
 				<tr class="bg-danger">
 					<td>Heater state</td>
 					<td>
-						Heating! <span id="countdown" class="badge badge-warning"><?=$toas?></span>
+						Heating! 
+						<?php if($toas != 0): ?>
+							<span id="countdown" class="badge badge-warning"><?=$toas?></span>
+						<?php else: ?>
+							<span class="badge badge-warning"> Till: <?=($toot/100)?><small> &#8451;</small></span>
+						<?php endif; ?>
 						<button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal" data-target="#turnOffModal">
 							Turn Off
 						</button>
